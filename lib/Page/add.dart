@@ -184,7 +184,7 @@ class _AddPageState extends State<AddPage> {
       String passWord = passwordController.text;
       String appName = idController.text;
       String userName = userController.text;
-      String authorName = userController.text;
+      String authorName = nameController.text;
       addToDatabase(passWord,appName,userName,authorName);
     }else{
       Fluttertoast.showToast(msg: "请输入所有数据!!!");
@@ -211,7 +211,7 @@ class _AddPageState extends State<AddPage> {
           [appName, authorName, userName, passWord]);
       print('inserted2: $id');
     });
-    database.close();
+    await database.close();
   }
 
 

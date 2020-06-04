@@ -50,41 +50,97 @@ class _ListPageState extends State<ListPage> {
 //        itemExtent: 50.0,
         itemCount: (listMap == null)?0:listMap.length,
         itemBuilder: (BuildContext context,int index){
-          return GestureDetector(
-            child: Column(
+          return
+            Column(
               children: <Widget>[
 
                 GestureDetector(
                   child: new Padding(
                     padding: EdgeInsets.only(
                       top: 10,
-                      bottom: 10,
-                      right: 20,
-                      left: 20,
                     ),
-                    child: Column(
+                    child: Row(
                       children: <Widget>[
-                        Text('应用名:'+listMap[index]['appName']),
-                        Text('使用者:'+listMap[index]['authorName']),
+                        Expanded(
+                          flex:3,
+                          child: Container(
+                            alignment: Alignment.center,
+
+                            height: 50,
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  listMap[index]['appName'],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Text(
+                                  listMap[index]['authorName'],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                )
+
+                              ],
+                            ),
+                            decoration: new BoxDecoration(
+                              gradient: const LinearGradient(
+                                  colors: [Color(0xFF3CC2E9), Color(0xFF817DFB)]
+                              ),
+                            ),
+                          ),
+                        ),
+                        if(flag.length>0&&flag[index]==2)
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              child: Container(
+                                height: 50,
+                                alignment: Alignment.center,
+                                decoration: new BoxDecoration(
+                                  gradient: const LinearGradient(
+                                      colors: [ Color(0xFF817DFB),Colors.red]
+                                  ),
+                                ),
+                                child: Icon(
+                                    Icons.delete,
+                                ),
+                              ),
+                              onTap: () => delItem(index,listMap[index]['id']),
+                            ),
+                          ),
                       ],
                     ),
                   ),
                   onTap: () => showCon(index,listMap.length),
+                  onLongPress: () => showDel(index,listMap.length),
                 ),
 
                 if(flag.length>0&&flag[index]==1)
                   Container(
+                    alignment: Alignment.center,
+
                     child: Column(
                       children: <Widget>[
-                        Text('账号:'+listMap[index]['userName']),
-                        Text('密码:'+listMap[index]['passWord']),
+                        Text(
+                          '账号:'+listMap[index]['userName'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '密码:'+listMap[index]['passWord'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ],
                     ),
                   ),
               ],
-            ),
-            
-          );
+            );
 //            onTap: showCon(index,list.length),
         },
 
@@ -123,10 +179,10 @@ class _ListPageState extends State<ListPage> {
               'CREATE TABLE IF NOT EXISTS PassWord (id INTEGER PRIMARY KEY, appName TEXT, authorName  TEXT, passWord TEXT,userName TEXT);');
         });
     listMap = await database.rawQuery('SELECT * FROM PassWord');
-//    print(listMap.length);
-//    for(int i=0;i<listMap.length;i++){
-//      print(listMap[i]);
-//    }
+    print(listMap.length);
+    for(int i=0;i<listMap.length;i++){
+      print(listMap[i]);
+    }
 //
 //    if(passList.length != listMap.length){
 //      passList.clear();
@@ -143,7 +199,46 @@ class _ListPageState extends State<ListPage> {
 //    }
 //    for(int i=0;i<passList.length;i++)
 //      print(passList[i].userName);
-    database.close();
+    await database.close();
+  }
+
+  showDel(int index, int length) {
+    setState(() {
+      if(flag.length == 0){
+        for(int i=0;i<length;i++){
+          flag.add(0);
+        }
+      }
+      if(flag[index] == 2){
+        flag[index] = 0;
+      }else{
+        for(int i=0;i<length;i++){
+          flag[i] = 0;
+        }
+        flag[index] = 2;
+      }
+
+    });
+  }
+
+  delItem(int index, int id) async {
+    print('123');
+    String databasePath = await getDatabasesPath();
+    String path = join(databasePath,'hyl.db');
+
+    Database database = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+          // When creating the db, create the table
+          await db.execute(
+              'CREATE TABLE IF NOT EXISTS PassWord (id INTEGER PRIMARY KEY, appName TEXT, authorName  TEXT, passWord TEXT,userName TEXT);');
+        });
+    var count = await database.rawDelete('DELETE FROM PassWord WHERE id = ?', [id]);
+
+    setState(() {
+      selectDatabase();
+      flag[index] = 0;
+    });
+//    showDel(index, length);
   }
 
 }
