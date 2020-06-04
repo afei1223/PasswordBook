@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:password_book/Page/nav.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() {
   runApp(MyApp());
@@ -67,7 +68,15 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('登陆'),
+        centerTitle: true,
+          flexibleSpace: Container(
+            decoration: new BoxDecoration(
+              gradient: const LinearGradient(
+                  colors: [Color(0xFF3CC2E9), Color(0xFF817DFB)]
+              ),
+            ),
+          ),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -107,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: TextField(
                   controller: passwordController,
                   obscureText: !showPassword,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                     labelText: '请你输入密码',
                     labelStyle: new TextStyle(
@@ -145,14 +154,13 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10),
               child: Container(
                 child: MaterialButton(
-                  onPressed: (){
-                    if(passwordController.text == 'hugou'){
-                      print("123");
-                      Navigator.push(
+                  onPressed: () {
+                    if(passwordController.text == 'huyilu'){
+                      Navigator.pushAndRemoveUntil(
                         context,
                         new MaterialPageRoute(
                           builder: (context) => new BottomNavigationWidget(),
-                        ),
+                        ), (route) => route == null,
                       );
                     }else{
                       showDialog(
@@ -175,8 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                   },
                   child: Text('登陆'),
-                  color: Colors.amber[600],
-                  highlightColor: Colors.deepOrange[600],
+                  color: Color(0xFF419EAD),
+//                  highlightColor: Colors.deepOrange[600],
                 ),
                 width: 300,
               ),
@@ -188,4 +196,5 @@ class _MyHomePageState extends State<MyHomePage> {
       
     );
   }
+
 }

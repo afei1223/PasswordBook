@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:password_book/Page/add.dart';
+import 'package:password_book/Page/list.dart';
+import 'persion.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   @override
@@ -7,49 +10,51 @@ class BottomNavigationWidget extends StatefulWidget {
 }
 
 class BottomNavigationWidgetState extends State<BottomNavigationWidget> {
-  final _bottomNavigationColor = Colors.blue;
   int _currentIndex = 0;
+
+  List<Widget> pages = List<Widget>();
+
+  @override
+  // ignore: must_call_super
+  void initState() {
+    pages
+      ..add(ListPage())
+      ..add(AddPage())
+      ..add(PersionPage());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
-                color: _bottomNavigationColor,
+                color: Color(0xFF3CC2E9),
               ),
               title: Text(
-                'HOME',
-                style: TextStyle(color: _bottomNavigationColor),
+                'LIST',
+                style: TextStyle(color: Color(0xFF3CC2E9)),
               )),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.email,
-                color: _bottomNavigationColor,
+                Icons.add,
+                color: Color(0xFF60A1F1),
               ),
               title: Text(
-                'Email',
-                style: TextStyle(color: _bottomNavigationColor),
+                'ADD',
+                style: TextStyle(color: Color(0xFF60A1F1)),
               )),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.pages,
-                color: _bottomNavigationColor,
+                Icons.person,
+                color: Color(0xFF817DFB),
               ),
               title: Text(
-                'PAGES',
-                style: TextStyle(color: _bottomNavigationColor),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.airplay,
-                color: _bottomNavigationColor,
-              ),
-              title: Text(
-                'AIRPLAY',
-                style: TextStyle(color: _bottomNavigationColor),
+                'hugou',
+                style: TextStyle(color: Color(0xFF817DFB)),
               )),
         ],
         currentIndex: _currentIndex,
